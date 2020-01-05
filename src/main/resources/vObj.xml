@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vobjs>
+  <vo class="com.demo.trade.entity.Customer" tableName="Customer">
+    <property name="id" column="id" isPrimaryKey="true"></property>
+    <property name="name" column="name"></property>
+    <property name="sex" column="sex"></property>
+    <property name="birthday" column="birthday"></property>
+    <property name="identification" column="identification"></property>
+    <property name="phone_number" column="phone_number"></property>
+    <join name="addresses" joinKey="customer_id" joinType="oneToMany" class="com.demo.trade.entity.Address"></join>
+  </vo>
+  <vo class="com.demo.trade.entity.Address" tableName="Address">
+  	<property name="id" column="id" isPrimaryKey="true"></property>
+  	<property name="customer_id" column="customer_id"></property>
+  	<property name="country" column="country"></property>
+  	<property name="province" column="province"></property>
+  	<property name="city" column="city"></property>
+  	<property name="zone" column="zone"></property>
+  	<property name="address" column="address"></property>
+  	<property name="phone_number" column="phone_number"></property>
+  </vo>
+  <vo class="com.demo.trade.entity.Product" tableName="Product">
+    <property name="id" column="id" isPrimaryKey="true"></property>
+    <property name="name" column="name"></property>
+    <property name="price" column="price"></property>
+    <property name="unit" column="unit"></property>
+    <property name="classify" column="classify"></property>
+    <join name="supplier" joinKey="supplier_id" joinType="manyToOne" class="com.demo.trade.entity.Supplier"></join>
+  </vo>
+  <vo class="com.demo.trade.entity.Supplier" tableName="Supplier">
+    <property name="id" column="id" isPrimaryKey="true"></property>
+    <property name="name" column="name"></property>
+  </vo>
+  <vo class="com.demo.trade.entity.Order" tableName="Order_Info">
+  	<property name="id" column="id" isPrimaryKey="true"></property>
+  	<property name="customer_id" column="customer_id"></property>
+  	<property name="address_id" column="address_id"></property>
+  	<property name="amount" column="amount"></property>
+  	<property name="order_time" column="order_time"></property>
+  	<property name="status" column="status"></property>
+  	<join name="customer" joinKey="customer_id" joinType="manyToOne" class="com.demo.trade.entity.Customer"></join>
+  	<join name="address" joinKey="address_id" joinType="manyToOne" class="com.demo.trade.entity.Address"></join>
+  	<join name="orderDetails" joinKey="order_id" joinType="oneToMany" isAggregation="true" class="com.demo.trade.entity.OrderDetail"></join>
+  </vo>
+  <vo class="com.demo.trade.entity.OrderDetail" tableName="Order_Detail">
+  	<property name="id" column="id" isPrimaryKey="true"></property>
+  	<property name="order_id" column="order_id"></property>
+  	<property name="product_id" column="product_id"></property>
+  	<property name="quantity" column="quantity"></property>
+  	<property name="price" column="price"></property>
+  	<property name="amount" column="amount"></property>
+  	<join name="product" joinKey="product_id" joinType="manyToOne" class="com.demo.trade.entity.Product"></join>
+  </vo>
+</vobjs>
