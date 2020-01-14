@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.demo.trade.query.dao.ProductMapper">
+<mapper namespace="com.demo2.trade.query.dao.ProductMapper">
 	<!--筛选条件-->
 	<sql id="searchParam">
 		<if test="id != '' and id != null">
@@ -33,7 +33,7 @@
 		</if>
 	</sql>
 	
-	<select id="query" parameterType="java.util.HashMap" resultType="com.demo.trade.entity.Product">
+	<select id="query" parameterType="java.util.HashMap" resultType="com.demo2.trade.entity.Product">
 		   <include refid="isCount1"/> 
 		   	 	SELECT * FROM Product WHERE 1 = 1
 				<include refid="searchParam"/>

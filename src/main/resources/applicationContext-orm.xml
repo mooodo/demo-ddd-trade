@@ -8,16 +8,16 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
 	>
 	<description>The application context for orm</description>
-	<bean id="customer" class="com.demo.trade.service.impl.CustomerServiceImpl">
+	<bean id="customer" class="com.demo2.trade.service.impl.CustomerServiceImpl">
 		<property name="dao" ref="repository"></property>
 	</bean>
-	<bean id="product" class="com.demo.trade.service.impl.ProductServiceImpl">
+	<bean id="product" class="com.demo2.trade.service.impl.ProductServiceImpl">
 		<property name="dao" ref="repository"></property>
 	</bean>
-	<bean id="supplier" class="com.demo.trade.service.impl.SupplierServiceImpl">
-		<property name="dao" ref="basicDao"></property>
+	<bean id="supplier" class="com.demo2.trade.service.impl.SupplierServiceImpl">
+		<property name="dao" ref="basicDaoJdbcImpl"></property>
 	</bean>
-	<bean id="order" class="com.demo.trade.service.impl.OrderServiceImpl">
+	<bean id="order" class="com.demo2.trade.service.impl.OrderServiceImpl">
 		<property name="dao" ref="repository"></property>
 	</bean>
 </beans>

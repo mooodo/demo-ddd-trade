@@ -16,4 +16,5 @@ mybatis:
   mapperLocations: classpath:mapper/*Mapper.xml
 logging:
   level:
-    com.demo.trade: DEBUG
+    com.demo2.trade: DEBUG
+    com.alibaba.druid.pool.DruidDataSource: ERROR
