@@ -19,11 +19,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo2.support.exception.OrmException;
@@ -34,14 +34,9 @@ import com.demo2.support.utils.DateUtils;
  * @author fangang
  */
 @RestController
-public class OrmController implements ApplicationContextAware {
+public class OrmController {
+	@Autowired
 	private ApplicationContext applicationContext = null;
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
-	}
 	
 	/**
 	 * execute a bean's method by POST method. 
@@ -52,7 +47,7 @@ public class OrmController implements ApplicationContextAware {
 	 * @param request
 	 * @return the returned value of the method
 	 */
-	@PostMapping("execute/{bean}/{method}")
+	@RequestMapping(value="orm/{bean}/{method}", method= {RequestMethod.GET, RequestMethod.POST})
 	public Object execute(@PathVariable("bean")String beanName, @PathVariable("method")String methodName, 
 			HttpServletRequest request) {
 		Object service = getBean(beanName);
@@ -66,31 +61,6 @@ public class OrmController implements ApplicationContextAware {
 		}
 		Object vo = getValueObj(method, json);
 		Object[] args = getArguments(method, json, vo);
-		return invoke(service, method, args);
-	}
-	
-	/**
-	 * execute a bean's method by GET method. 
-	 * NOTE: the method must has none of value object. 
-	 * The parameters must name like arg0, arg1, and so on. 
-	 * @param beanName
-	 * @param methodName
-	 * @param request
-	 * @return the returned value of the method
-	 */
-	@GetMapping("get/{bean}/{method}")
-	public Object get(@PathVariable("bean")String beanName, @PathVariable("method")String methodName, 
-			HttpServletRequest request) {
-		Object service = getBean(beanName);
-		Method method = getMethod(service, methodName);
-		
-		Map<String, String> json = new HashMap<String, String>();
-		for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements();) {
-			String key = e.nextElement();
-			String value = request.getParameter(key);
-			json.put(key, value);
-		}
-		Object[] args = getArguments(method, json, null);
 		return invoke(service, method, args);
 	}
 	

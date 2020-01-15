@@ -70,15 +70,20 @@ public class AutofillQueryServiceImpl extends QueryServiceImpl {
 	private void autofill(List<?> list, Join join) {
 		List<Serializable> listOfIds = new ArrayList<>();
 		String key = join.getJoinKey();
+		//TODO no implements oneToMany and manyToMany because of the performance reason.
 		if(!"oneToOne".equals(join.getJoinType())&&!"manyToOne".equals(join.getJoinType())) return;
 		
+		//get all of the ids.
 		for(Object vo : list) {
 			Serializable id = (Serializable)BeanUtils.getValueByField(vo, key);
 			listOfIds.add(id);
 		}
 		
+		//load each of the entities by its id.
 		Entity template = BeanUtils.createEntity(join.getClazz());
 		List<Entity> listOfEntity = dao.loadForList(listOfIds, template);
+		
+		//TODO when give the interface and method, how get the implement of feign provide?
 		
 		Map<Object, Entity> mapOfEntity = new HashMap<>();
 		for(Entity entity : listOfEntity) {
