@@ -37,7 +37,7 @@ public class ProductQueryServiceImpl extends QueryServiceImpl {
 			//Supplier supplier = supplierService.loadSupplier(supplierId);
 			//product.setSupplier(supplier);
 		}
-		List<Supplier> listOfSuppliers = supplierService.loadSupplier(listOfIds);
+		List<Supplier> listOfSuppliers = supplierService.loadSuppliers(listOfIds);
 		
 		Map<Object, Supplier> mapOfSupplier = new HashMap<>();
 		for(Supplier supplier : listOfSuppliers) {

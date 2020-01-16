@@ -40,7 +40,7 @@ public class SupplierServiceImpl implements SupplierService {
 		return dao.loadAll(supplier);
 	}
 	@Override
-	public List<Supplier> loadSupplier(List<Long> ids) {
+	public List<Supplier> loadSuppliers(List<Long> ids) {
 		Supplier supplier = new Supplier();
 		List<Serializable> list = new ArrayList<>();
 		for(Long id : ids) list.add(id);

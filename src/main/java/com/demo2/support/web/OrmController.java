@@ -134,6 +134,7 @@ public class OrmController {
 	 */
 	private boolean isValueObject(Class<?> clazz) {
 		if(clazz==null) return false;
+		if(clazz.equals(long.class)||clazz.equals(int.class)||clazz.equals(double.class)||clazz.equals(float.class)||clazz.equals(short.class)) return false;
 		if(Number.class.isAssignableFrom(clazz)) return false;
 		if(String.class.isAssignableFrom(clazz)) return false;
 		if(Date.class.isAssignableFrom(clazz)) return false;
