@@ -3,6 +3,7 @@
  */
 package com.demo2.trade.service;
 
+import com.demo2.trade.entity.Address;
 import com.demo2.trade.entity.Customer;
 
 /**
@@ -25,4 +26,10 @@ public interface CustomerService {
 	 * @return the customer of the id.
 	 */
 	public Customer load(long id);
+	
+	/**
+	 * @param id
+	 * @return the address of the id
+	 */
+	public Address loadAddress(long id);
 }

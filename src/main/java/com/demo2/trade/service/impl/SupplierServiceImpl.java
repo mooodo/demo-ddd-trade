@@ -3,8 +3,6 @@
  */
 package com.demo2.trade.service.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.demo2.support.dao.BasicDao;
@@ -35,15 +33,13 @@ public class SupplierServiceImpl implements SupplierService {
 		return dao.load(id, supplier);
 	}
 	@Override
-	public List<Supplier> listOfSupplier() {
+	public List<Supplier> listOfSuppliers() {
 		Supplier supplier = new Supplier();
 		return dao.loadAll(supplier);
 	}
 	@Override
 	public List<Supplier> loadSuppliers(List<Long> ids) {
 		Supplier supplier = new Supplier();
-		List<Serializable> list = new ArrayList<>();
-		for(Long id : ids) list.add(id);
-		return dao.loadForList(list, supplier);
+		return dao.loadForList(ids, supplier);
 	}
 }

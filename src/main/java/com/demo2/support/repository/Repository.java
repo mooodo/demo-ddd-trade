@@ -1,13 +1,10 @@
-/**
- * 
- */
 package com.demo2.support.repository;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.demo2.support.dao.BasicDao;
 import com.demo2.support.dao.impl.factory.Join;
@@ -20,7 +17,6 @@ import com.demo2.support.utils.BeanUtils;
  * The generic DDD repository for all of the services in the system.
  * @author fangang
  */
-@Component
 public class Repository implements BasicDao {
 	private BasicDao dao;
 	
@@ -39,7 +35,7 @@ public class Repository implements BasicDao {
 	}
 
 	@Override
-	public <T extends Entity> T load(Serializable id, T template) {
+	public <S extends Serializable, T extends Entity<S>> T load(S id, T template) {
 		T vo = loadFromCache(id, template);
 		if(vo!=null) return vo;
 		vo = loadFromDb(id, template);
@@ -53,7 +49,7 @@ public class Repository implements BasicDao {
 	 * @param template
 	 * @return the value object
 	 */
-	private <T extends Entity> T loadFromCache(Serializable id, T template) {
+	private <S extends Serializable, T extends Entity<S>> T loadFromCache(S id, T template) {
 		return null;
 	}
 
@@ -63,7 +59,7 @@ public class Repository implements BasicDao {
 	 * @param template
 	 * @return the value object
 	 */
-	private <T extends Entity> T loadFromDb(Serializable id, T template) {
+	private <S extends Serializable, T extends Entity<S>> T loadFromDb(S id, T template) {
 		T vo = dao.load(id, template);
 		return vo;
 	}
@@ -72,19 +68,40 @@ public class Repository implements BasicDao {
 	 * set the value object's joins, if it has.
 	 * @param vo
 	 */
-	private void setJoins(Entity vo) {
+	private <S extends Serializable> void setJoins(Entity<S> vo) {
+		if(vo==null) return;
 		VObj vObj = VObjFactory.getVObj(vo.getClass().getName());
 		List<Join> listOfJoins = vObj.getJoins();
 		if(listOfJoins==null||listOfJoins.isEmpty()) return;
 		
 		for(Join join : listOfJoins) {
-			GenericEntityFactory factory = new GenericEntityFactory();
+			GenericEntityFactory<S> factory = new GenericEntityFactory<>();
 			factory.build(join, vo, dao);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void saveDetail(Object vo) {
+	/**
+	 * @param template
+	 * @return whether the value object has join and the join is aggregation.
+	 */
+	private <S extends Serializable> boolean hasJoinAndAggregation(Entity<S> template) {
+		if(template==null) return false;
+		VObj vObj = VObjFactory.getVObj(template.getClass().getName());
+		List<Join> listOfJoins = vObj.getJoins();
+		if(listOfJoins==null||listOfJoins.isEmpty()) return false;
+		int count = 0;
+		for(Join join : listOfJoins) {
+			if(join.isAggregation()) count++;
+		}
+		if(count>0) return true;
+		return false;
+	}
+	
+	/**
+	 * save all of the items of a value object, if it has.
+	 * @param vo the value object
+	 */
+	private void saveItems(Object vo) {
 		VObj vObj = VObjFactory.getVObj(vo.getClass().getName());
 		List<Join> listOfJoins = vObj.getJoins();
 		if(listOfJoins==null||listOfJoins.isEmpty()) return;
@@ -92,19 +109,23 @@ public class Repository implements BasicDao {
 		for(Join join : listOfJoins) {
 			if(!join.isAggregation()) continue;
 			String name = join.getName();
-			Object detail = BeanUtils.getValueByField(vo, name);
-			
-			if(Collection.class.isAssignableFrom(detail.getClass())) {
-				Collection<Object> collection = (Collection<Object>)detail;
-				dao.insertOrUpdate(collection);
+			Object items = BeanUtils.getValueByField(vo, name);
+			if(items==null) continue;
+			if(Collection.class.isAssignableFrom(items.getClass())) {
+				@SuppressWarnings("unchecked")
+				Collection<Object> collection = (Collection<Object>)items;
+				dao.insertOrUpdateForList(collection);//is a lot of items.
 			} else {
-				dao.insertOrUpdate(detail);
+				dao.insertOrUpdate(items);//just one item.
 			}
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void deleteDetail(Object vo) {
+	/**
+	 * delete all of the items of a value object, if it has.
+	 * @param vo the value object
+	 */
+	private void deleteItems(Object vo) {
 		VObj vObj = VObjFactory.getVObj(vo.getClass().getName());
 		List<Join> listOfJoins = vObj.getJoins();
 		if(listOfJoins==null||listOfJoins.isEmpty()) return;
@@ -112,73 +133,87 @@ public class Repository implements BasicDao {
 		for(Join join : listOfJoins) {
 			if(!join.isAggregation()) continue;
 			String name = join.getName();
-			Object detail = BeanUtils.getValueByField(vo, name);
-			
-			if(Collection.class.isAssignableFrom(detail.getClass())) {
-				Collection<Object> collection = (Collection<Object>)detail;
-				dao.delete(collection);
+			Object items = BeanUtils.getValueByField(vo, name);
+			if(items==null) continue;
+			if(Collection.class.isAssignableFrom(items.getClass())) {
+				@SuppressWarnings("unchecked")
+				Collection<Object> collection = (Collection<Object>)items;
+				dao.deleteForList(collection);//is a lot of items.
 			} else {
-				dao.delete(detail);
+				dao.delete(items);//just one item.
 			}
 		}
 	}
 
 	@Override
-	public void insert(Object vo) {
+	@Transactional
+	public <T> void insert(T vo) {
 		dao.insert(vo);
-		saveDetail(vo);
+		saveItems(vo);
 	}
 
 	@Override
-	public void update(Object vo) {
+	@Transactional
+	public <T> void update(T vo) {
 		dao.update(vo);
-		saveDetail(vo);
+		saveItems(vo);
 	}
 
 	@Override
-	public void insertOrUpdate(Object vo) {
+	@Transactional
+	public <T> void insertOrUpdate(T vo) {
 		dao.insertOrUpdate(vo);
-		saveDetail(vo);
+		saveItems(vo);
 	}
 
 	@Override
-	public void insertOrUpdate(Collection<Object> list) {
-		dao.insertOrUpdate(list);
-		for(Object vo : list) {
-			saveDetail(vo);
-		}
+	@Transactional
+	public <T, S extends Collection<T>> void insertOrUpdateForList(S list) {
+		for(Object vo : list) insertOrUpdate(vo);
 	}
 
 	@Override
-	public void delete(Object vo) {
+	@Transactional
+	public <T> void delete(T vo) {
 		dao.delete(vo);
-		deleteDetail(vo);
+		deleteItems(vo);
 	}
 
 	@Override
-	public void delete(Collection<Object> list) {
-		dao.delete(list);
-		for(Object vo : list){
-			deleteDetail(vo);
-		}
+	@Transactional
+	public <T, S extends Collection<T>> void deleteForList(S list) {
+		for(Object vo : list) delete(vo);
 	}
 
 	@Override
-	public <T extends Entity> List<T> loadAll(T template) {
-		//TODO 
-		return dao.loadAll(template);
-	}
-
-	@Override
-	public <T extends Entity> void delete(Serializable id, T template) {
-		//TODO
-		dao.delete(id, template);
-	}
-
-	@Override
-	public <T extends Entity> List<T> loadForList(List<Serializable> ids, T template) {
-		List<T> list = dao.loadForList(ids, template);
-		
+	public <S extends Serializable, T extends Entity<S>> List<T> loadAll(T template) {
+		List<T> list = dao.loadAll(template);
+		for(T vo : list) setJoins(vo);
 		return list;
+	}
+
+	@Override
+	@Transactional
+	public <S extends Serializable, T extends Entity<S>> void delete(S id, T template) {
+		if(hasJoinAndAggregation(template)) {
+			T vo = dao.load(id, template);
+			delete(vo);
+		} else dao.delete(id, template);
+	}
+
+	@Override
+	public <S extends Serializable, T extends Entity<S>> List<T> loadForList(List<S> ids, T template) {
+		List<T> list = dao.loadForList(ids, template);
+		for(T vo : list) setJoins(vo);
+		return list;
+	}
+
+	@Override
+	@Transactional
+	public <S extends Serializable, T extends Entity<S>> void deleteForList(List<S> ids, T template) {
+		if(hasJoinAndAggregation(template)) {
+			List<T> list = dao.loadForList(ids, template);
+			deleteForList(list);
+		} else dao.deleteForList(ids, template);
 	}
 }

@@ -3,7 +3,6 @@
  */
 package com.demo2.trade.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import com.demo2.support.entity.Entity;
  * The customer entity
  * @author fangang
  */
-public class Customer extends Entity {
+public class Customer extends Entity<Long> {
 	private static final long serialVersionUID = 5704896146658318508L;
 	private Long id;
 	private String name;
@@ -37,25 +36,21 @@ public class Customer extends Entity {
 	}
 
 	/**
+	 * @param id the id to set
+	 */
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	/**
 	 * @return the id
 	 */
 	@Override
 	public Long getId() {
 		return id;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	@Override
-	public void setId(Serializable id) {
-		this.id = (Long)id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+
 	/**
 	 * @return the name
 	 */

@@ -20,20 +20,28 @@ public class BeanUtils {
 	 * @param className
 	 * @return the entity
 	 */
-	public static Entity createEntity(String className) {
+	public static <S extends Serializable> Entity<S> createEntity(String className, S id) {
 		try {
-			Class<? extends Entity> clazz = Class.forName(className).asSubclass(Entity.class);
-			return clazz.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			throw new OrmException("error when instance the entity["+className+"]", e);
+			@SuppressWarnings("unchecked")
+			Class<? extends Entity<S>> clazz = (Class<? extends Entity<S>>) Class.forName(className).asSubclass(Entity.class);
+			Entity<S> entity = createEntity(clazz);
+			entity.setId(id);
+			return entity;
+		} catch (ClassNotFoundException e) {
+			throw new OrmException("error because the entity["+className+"] must exits and extends the class [Entity]", e);
 		}
 	}
 	
-	public static Entity createEntity(Class<? extends Entity> clazz) {
+	/**
+	 * create an entity by class
+	 * @param clazz
+	 * @return the entity
+	 */
+	public static <S extends Serializable> Entity<S> createEntity(Class<? extends Entity<S>> clazz) {
 		try {
 			return clazz.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new OrmException("error when instance the entity", e);
+			throw new OrmException("error when instance the entity["+clazz.getName()+"]", e);
 		}
 	}
 	
@@ -50,9 +58,9 @@ public class BeanUtils {
 			if(!isAccessible) field.setAccessible(true);
 			Object value = field.get(bean);
 			field.setAccessible(isAccessible);
-			return (Serializable) value;
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			throw new OrmException("error when get value from the bean", e);
+			return value;
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+			throw new OrmException("error when get value from the bean[bean:"+bean+",field:"+fieldName+"]", e);
 		}
 	}
 	

@@ -4,8 +4,6 @@
 package com.demo2.support.repository;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +14,11 @@ import com.demo2.support.dao.impl.factory.VObjFactory;
 import com.demo2.support.entity.Entity;
 import com.demo2.support.entity.ResultSet;
 import com.demo2.support.service.impl.QueryServiceImpl;
-import com.demo2.support.utils.BeanUtils;
 
 /**
+ * The implement of the query service that 
+ * it auto fill each of the object property of the item of the query result set, like this: 
+ * fill the addresses of each the customer of the result set.
  * @author fangang
  */
 public class AutofillQueryServiceImpl extends QueryServiceImpl {
@@ -35,19 +35,25 @@ public class AutofillQueryServiceImpl extends QueryServiceImpl {
 	public void setDao(BasicDao dao) {
 		this.dao = dao;
 	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected ResultSet afterQuery(Map<String, Object> params, ResultSet resultSet) {
+		//if no result, do nothing.
 		List<?> list = resultSet.getData();
 		if(list==null||list.isEmpty())
 			return super.afterQuery(params, resultSet);
 		
+		//if the value object hasn't any join, do nothing.
 		Object firstOfVo = list.get(0);
 		List<Join> listOfJoins = listOfJoins(firstOfVo);
 		if(listOfJoins==null||listOfJoins.isEmpty())
 			return super.afterQuery(params, resultSet);
 		
+		//auto fill value objects for each joins.
 		for(Join join : listOfJoins) {
-			autofill(list, join);
+			//TODO have exception
+			autofill((List<Entity<Serializable>>)list, join);
 		}
 		return super.afterQuery(params, resultSet);
 	}
@@ -67,34 +73,51 @@ public class AutofillQueryServiceImpl extends QueryServiceImpl {
 	 * @param list
 	 * @param join
 	 */
-	private void autofill(List<?> list, Join join) {
-		List<Serializable> listOfIds = new ArrayList<>();
-		String key = join.getJoinKey();
-		//TODO no implements oneToMany and manyToMany because of the performance reason.
-		if(!"oneToOne".equals(join.getJoinType())&&!"manyToOne".equals(join.getJoinType())) return;
-		
-		//get all of the ids.
-		for(Object vo : list) {
-			Serializable id = (Serializable)BeanUtils.getValueByField(vo, key);
-			listOfIds.add(id);
-		}
-		
-		//load each of the entities by its id.
-		Entity template = BeanUtils.createEntity(join.getClazz());
-		List<Entity> listOfEntity = dao.loadForList(listOfIds, template);
-		
-		//TODO when give the interface and method, how get the implement of feign provide?
-		
-		Map<Object, Entity> mapOfEntity = new HashMap<>();
-		for(Entity entity : listOfEntity) {
-			mapOfEntity.put(entity.getId(), entity);
-		}
-		
-		for(Object vo : list) {
-			Serializable id = (Serializable)BeanUtils.getValueByField(vo, key);
-			Entity entity = mapOfEntity.get(id);
-			BeanUtils.setValueByField(vo, join.getName(), entity);
+	private <S extends Serializable, T extends Entity<S>> void autofill(List<T> list, Join join) {
+		if(list==null||list.isEmpty()) return;
+		for(T vo : list) {
+			GenericEntityFactory<S> factory = new GenericEntityFactory<S>();
+			factory.build(join, vo, dao);
 		}
 	}
-
+	
+//	/**
+//	 * auto fill all of the joins in the value object.
+//	 * @param list
+//	 * @param join
+//	 */
+//	private <S extends Serializable, T extends Entity<S>> void autofill(List<T> list, Join join) {
+//		List<S> listOfIds = new ArrayList<>();
+//		String key = join.getJoinKey();
+//		//TODO no implements oneToMany and manyToMany because of the performance reason.
+//		if(!"oneToOne".equals(join.getJoinType())&&!"manyToOne".equals(join.getJoinType())) return;
+//		
+//		//get all of the ids.
+//		if(list==null||list.isEmpty()) return;
+//		for(T vo : list) {
+//			@SuppressWarnings("unchecked")
+//			//TODO have exception
+//			S id = (S)BeanUtils.getValueByField(vo, key);
+//			listOfIds.add(id);
+//		}
+//		
+//		//load each of the entities by its id.
+//		Entity<S> template = BeanUtils.createEntity(join.getClazz(), listOfIds.get(0));
+//		List<Entity<S>> listOfEntity = dao.loadForList(listOfIds, template);
+//		
+//		//TODO when give the interface and method, how get the implement of feign provide?
+//		
+//		Map<Object, Entity<S>> mapOfEntity = new HashMap<>();
+//		for(Entity<S> entity : listOfEntity) {
+//			mapOfEntity.put(entity.getId(), entity);
+//		}
+//		
+//		for(T vo : list) {
+//			@SuppressWarnings("unchecked")
+//			//TODO have exception
+//			S id = (S)BeanUtils.getValueByField(vo, key);
+//			Entity<S> entity = mapOfEntity.get(id);
+//			BeanUtils.setValueByField(vo, join.getName(), entity);
+//		}
+//	}
 }

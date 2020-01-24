@@ -3,15 +3,13 @@
  */
 package com.demo2.trade.entity;
 
-import java.io.Serializable;
-
 import com.demo2.support.entity.Entity;
 
 /**
  * The product entity
  * @author fangang
  */
-public class Product extends Entity {
+public class Product extends Entity<Long> {
 	private static final long serialVersionUID = 7149822235159719740L;
 	private Long id;
 	private String name;
@@ -21,7 +19,7 @@ public class Product extends Entity {
 	private String classify;
 	private Supplier supplier;
 	
-	public Product() {}
+	public Product() { super(); }
 	public Product(Long id, String name, Double price, String unit, Long supplierId,
 			String classify) {
 		super();
@@ -43,14 +41,8 @@ public class Product extends Entity {
 	 * @param id the id to set
 	 */
 	@Override
-	public void setId(Serializable id) {
-		this.id = (Long)id;
-	}
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
-		this.id = id;
+		this.id = (Long)id;
 	}
 	/**
 	 * @return the name

@@ -4,6 +4,7 @@
 package com.demo2.trade.service.impl;
 
 import com.demo2.support.dao.BasicDao;
+import com.demo2.trade.entity.Address;
 import com.demo2.trade.entity.Customer;
 import com.demo2.trade.service.CustomerService;
 
@@ -31,8 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	@Override
 	public void delete(long id) {
-		Customer customer = new Customer();
-		customer.setId(id);
+		Customer customer = dao.load(id, new Customer());
 		dao.delete(customer);
 	}
 	@Override
@@ -40,5 +40,11 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = new Customer();
 		customer.setId(id);
 		return dao.load(id, customer);
+	}
+	@Override
+	public Address loadAddress(long id) {
+		Address address = new Address();
+		address.setId(id);
+		return dao.load(id, address);
 	}
 }

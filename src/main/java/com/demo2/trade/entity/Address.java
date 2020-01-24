@@ -3,14 +3,12 @@
  */
 package com.demo2.trade.entity;
 
-import java.io.Serializable;
-
 import com.demo2.support.entity.Entity;
 
 /**
  * @author fangang
  */
-public class Address extends Entity {
+public class Address extends Entity<Long> {
 	private static final long serialVersionUID = -7715747957884378980L;
 	private Long id;
 	private Long customer_id;
@@ -23,13 +21,13 @@ public class Address extends Entity {
 	/**
 	 * @return the id
 	 */
-	public Serializable getId() {
+	public Long getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Serializable id) {
+	public void setId(Long id) {
 		this.id = (Long)id;
 	}
 	/**

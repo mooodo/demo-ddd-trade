@@ -17,7 +17,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @Configuration
 @ComponentScan(basePackages={"com.demo2"})
-@ImportResource(locations={"classpath:applicationContext-*.xml"})
+@ImportResource(locations={"classpath*:applicationContext-*.xml"})
 @MapperScan("com.demo2.support.dao")
 public class TradeApplication {
 	/**

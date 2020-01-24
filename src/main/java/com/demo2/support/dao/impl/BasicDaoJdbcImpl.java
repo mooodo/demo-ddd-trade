@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Component;
 
 import com.demo2.support.dao.BasicDao;
 import com.demo2.support.dao.impl.factory.Property;
@@ -30,13 +29,12 @@ import com.demo2.support.utils.DateUtils;
  * The implement of BasicDao with Jdbc.
  * @author fangang
  */
-@Component
 public class BasicDaoJdbcImpl implements BasicDao {
 	@Autowired
 	private GenericDao dao;
 
 	@Override
-	public void insert(Object vo) {
+	public <T> void insert(T vo) {
 		if(vo==null) throw new DaoException("The value object is null");
 		TmpObj tmpObj = readDataFromVo(vo);
 		try {
@@ -47,7 +45,7 @@ public class BasicDaoJdbcImpl implements BasicDao {
 	}
 
 	@Override
-	public void update(Object vo) {
+	public <T> void update(T vo) {
 		if(vo==null) throw new DaoException("The value object is null");
 		TmpObj tmpObj = readDataFromVo(vo);
 		try {
@@ -55,11 +53,10 @@ public class BasicDaoJdbcImpl implements BasicDao {
 		} catch (DataAccessException e) {
 			throw new DaoException("error when update vo");
 		}
-		
 	}
 
 	@Override
-	public void insertOrUpdate(Object vo) {
+	public <T> void insertOrUpdate(T vo) {
 		if(vo==null) throw new DaoException("The value object is null");
 		TmpObj tmpObj = readDataFromVo(vo);
 		try {
@@ -72,44 +69,70 @@ public class BasicDaoJdbcImpl implements BasicDao {
 	}
 
 	@Override
-	public void insertOrUpdate(Collection<Object> list) {
+	public <T, S extends Collection<T>> void insertOrUpdateForList(S list) {
 		for(Object vo : list) insertOrUpdate(vo);
 	}
 
 	@Override
-	public void delete(Object vo) {
+	public <T> void delete(T vo) {
 		TmpObj tmpObj = readDataFromVo(vo);
 		dao.delete(tmpObj.tableName, tmpObj.pkMap);
 	}
 
 	@Override
-	public void delete(Collection<Object> list) {
+	public <T, S extends Collection<T>> void deleteForList(S list) {
 		for(Object vo : list) delete(vo);
+	}
+
+	@Override
+	public <S extends Serializable, T extends Entity<S>> void deleteForList(List<S> ids, T template) {
+		TmpObj tmpObj = prepareForList(ids, template);
+		dao.deleteForList(tmpObj.tableName, tmpObj.pkMap);
 	}
 	
 	@Override
-	public <T extends Entity> T load(Serializable id, T template) {
+	public <S extends Serializable, T extends Entity<S>> T load(S id, T template) {
 		if(id==null||template==null) throw new DaoException("illegal parameters!");
 		template.setId(id);
 		TmpObj tmpObj = readDataFromVo(template);
 		List<Map<String, Object>> list = dao.find(tmpObj.tableName, tmpObj.pkMap);
+		if(list.isEmpty()) return null;
 		Map<String, Object> map = list.get(0);
 		return this.setMapToVo(map, template);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Entity> List<T> loadForList(List<Serializable> ids, T template) {
-		if(ids==null||ids.isEmpty()||template==null) throw new DaoException("illegal parameters!");
+	public <S extends Serializable, T extends Entity<S>> List<T> loadForList(List<S> ids, T template) {
+		TmpObj tmpObj = prepareForList(ids, template);
 		
+		List<Map<String, Object>> list = dao.load(tmpObj.tableName, tmpObj.pkMap);
+		
+		//convert result set from List<Map> to List<Entity>
+		List<T> listOfVo = new ArrayList<T>();
+		for(Map<String, Object> map : list) {
+			@SuppressWarnings("unchecked")
+			T temp = (T)BeanUtils.createEntity((Class<T>)template.getClass());
+			T vo = this.setMapToVo(map, temp);
+			listOfVo.add(vo);
+		}
+		return listOfVo;
+	}
+	
+	private <S extends Serializable, T extends Entity<S>> TmpObj prepareForList(List<S> ids, T template) {
+		if(template==null) throw new DaoException("illegal parameters!");
+		if(ids==null||ids.isEmpty()) return null;
+		
+		//list of TmpObj, which help to execute sql.
 		List<TmpObj> listOfTmpObj = new ArrayList<>();
-		for(Serializable id : ids) {
-			T temp = (T)BeanUtils.createEntity(template.getClass());
+		for(S id : ids) {
+			@SuppressWarnings("unchecked")
+			T temp = (T)BeanUtils.createEntity((Class<T>)template.getClass());
 			temp.setId(id);
 			TmpObj tmpObj = readDataFromVo(temp);
 			listOfTmpObj.add(tmpObj);
 		}
 		
+		//
 		Map<Object, List<Object>> mapOfValues = new HashMap<>();
 		for(TmpObj tmpObj : listOfTmpObj) {
 			 for(Map<Object, Object> map : tmpObj.pkMap) {
@@ -128,28 +151,19 @@ public class BasicDaoJdbcImpl implements BasicDao {
 			map.put("value", mapOfValues.get(key));
 			pkMap.add(map);
 		}
-		tmpObj.pkMap = pkMap;		
-		
-		List<Map<String, Object>> list = dao.load(tmpObj.tableName, tmpObj.pkMap);
-		
-		List<T> listOfVo = new ArrayList<T>();
-		for(Map<String, Object> map : list) {
-			T temp = (T)BeanUtils.createEntity(template.getClass());
-			T vo = this.setMapToVo(map, temp);
-			listOfVo.add(vo);
-		}
-		return listOfVo;
+		tmpObj.pkMap = pkMap;
+		return tmpObj;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Entity> List<T> loadAll(T template) {
+	public <S extends Serializable, T extends Entity<S>> List<T> loadAll(T template) {
 		TmpObj tmpObj = readDataFromVo(template);
 		List<Map<String, Object>> list = dao.find(tmpObj.tableName, tmpObj.colMap);
 		
-		List<T> listOfVo = new ArrayList<T>();
+		List<T> listOfVo = new ArrayList<>();
 		for(Map<String, Object> map : list) {
-			T temp = (T)BeanUtils.createEntity(template.getClass());
+			@SuppressWarnings("unchecked")
+			T temp = (T)BeanUtils.createEntity((Class<T>)template.getClass());
 			T vo = this.setMapToVo(map, temp);
 			listOfVo.add(vo);
 		}
@@ -157,7 +171,7 @@ public class BasicDaoJdbcImpl implements BasicDao {
 	}
 	
 	@Override
-	public <T extends Entity> void delete(Serializable id, T template) {
+	public <S extends Serializable, T extends Entity<S>> void delete(S id, T template) {
 		if(id==null||template==null) throw new DaoException("illegal parameters!");
 		T vo = this.load(id, template);
 		this.delete(vo);
@@ -234,7 +248,7 @@ public class BasicDaoJdbcImpl implements BasicDao {
 		if(clazz.equals(Short.class)||clazz.equals(short.class)) return new Short(str);
 		
 		if(clazz.equals(Date.class)&&str.length()==10) return DateUtils.getDate(str,"yyyy-MM-dd");
-		if(clazz.equals(Date.class)) return DateUtils.getDate(str);
+		if(clazz.equals(Date.class)) return DateUtils.getDate(str,"yyyy-MM-dd HH:mm:ss");
 		
 		//TODO how to bind map, list and set.
 		return value;

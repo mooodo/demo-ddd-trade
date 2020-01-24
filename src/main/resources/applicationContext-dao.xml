@@ -7,20 +7,9 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
 	>
-	<description>The application context for query</description>
-	<bean id="customerQry" class="com.demo2.support.service.impl.QueryServiceImpl">
-		<property name="queryDao">
-			<bean class="com.demo2.support.dao.impl.QueryDaoMybatisImpl">
-				<property name="sqlMapper" value="com.demo2.trade.query.dao.CustomerMapper.query"></property>
-			</bean>
-		</property>
-	</bean>
-	<bean id="productQry" class="com.demo2.support.repository.AutofillQueryServiceImpl">
-		<property name="queryDao">
-			<bean class="com.demo2.support.dao.impl.QueryDaoMybatisImpl">
-				<property name="sqlMapper" value="com.demo2.trade.query.dao.ProductMapper.query"></property>
-			</bean>
-		</property>
+	<description>The application context for dao</description>
+	<bean id="basicDao" class="com.demo2.support.dao.impl.BasicDaoJdbcImpl"></bean>
+	<bean id="repository" class="com.demo2.support.repository.Repository">
 		<property name="dao" ref="basicDao"></property>
 	</bean>
 </beans>

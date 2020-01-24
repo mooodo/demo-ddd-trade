@@ -26,5 +26,5 @@ public interface SupplierService {
 	/**
 	 * @return the list of supplier
 	 */
-	public List<Supplier> listOfSupplier();
+	public List<Supplier> listOfSuppliers();
 }

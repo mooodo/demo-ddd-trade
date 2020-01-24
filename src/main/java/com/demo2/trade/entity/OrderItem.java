@@ -3,14 +3,12 @@
  */
 package com.demo2.trade.entity;
 
-import java.io.Serializable;
-
 import com.demo2.support.entity.Entity;
 
 /**
  * @author fangang
  */
-public class OrderDetail extends Entity {
+public class OrderItem extends Entity<Long> {
 	private static final long serialVersionUID = 7010469293079068192L;
 	private Long id;
 	private Long order_id;
@@ -21,41 +19,41 @@ public class OrderDetail extends Entity {
 	private Product product;
 	
 	@Override
-	public Serializable getId() {
+	public Long getId() {
 		return this.id;
 	}
 
 	@Override
-	public void setId(Serializable id) {
+	public void setId(Long id) {
 		this.id = (Long) id;
 	}
 
 	/**
 	 * @return the order_id
 	 */
-	public Long getOrder_id() {
+	public Long getOrderId() {
 		return order_id;
 	}
 
 	/**
 	 * @param order_id the order_id to set
 	 */
-	public void setOrder_id(Long order_id) {
-		this.order_id = order_id;
+	public void setOrderId(Long orderId) {
+		this.order_id = orderId;
 	}
 
 	/**
 	 * @return the product_id
 	 */
-	public Long getProduct_id() {
+	public Long getProductId() {
 		return product_id;
 	}
 
 	/**
 	 * @param product_id the product_id to set
 	 */
-	public void setProduct_id(Long product_id) {
-		this.product_id = product_id;
+	public void setProductId(Long productId) {
+		this.product_id = productId;
 	}
 
 	/**
@@ -98,20 +96,6 @@ public class OrderDetail extends Entity {
 	 */
 	public void setAmount(Double amount) {
 		this.amount = amount;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	/**

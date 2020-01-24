@@ -15,7 +15,7 @@
 		<property name="dao" ref="repository"></property>
 	</bean>
 	<bean id="supplier" class="com.demo2.trade.service.impl.SupplierServiceImpl">
-		<property name="dao" ref="basicDaoJdbcImpl"></property>
+		<property name="dao" ref="basicDao"></property>
 	</bean>
 	<bean id="order" class="com.demo2.trade.service.impl.OrderServiceImpl">
 		<property name="dao" ref="repository"></property>

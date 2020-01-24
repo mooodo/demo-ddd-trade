@@ -27,10 +27,23 @@ public interface ProductService {
 	 * @param id
 	 */
 	public void deleteProduct(Long id);
+	
+	/**
+	 * delete a list of products
+	 * @param ids
+	 */
+	public void deleteProductList(List<Long> ids);
 	/**
 	 * get a product by id.
 	 * @param id
 	 * @return a certain product.
 	 */
 	public Product getProduct(Long id);
+	
+	/**
+	 * get a list of products by their id.
+	 * @param ids
+	 * @return a list of products
+	 */
+	public List<Product> getProductList(List<Long> ids);
 }

@@ -18,22 +18,22 @@ public interface BasicDao {
 	 * insert a value object into table.
 	 * @param vo
 	 */
-	public void insert(Object vo);
+	public <T> void insert(T vo);
 	/**
 	 * update a value object.
 	 * @param vo
 	 */
-	public void update(Object vo);
+	public <T> void update(T vo);
 	/**
 	 * if not exists, then insert, else update.
 	 * @param vo
 	 */
-	public void insertOrUpdate(Object vo);
+	public <T> void insertOrUpdate(T vo);
 	/**
 	 * insert a list of value objects, and if exists, then update.
 	 * @param list
 	 */
-	public void insertOrUpdate(Collection<Object> list);
+	public <T, S extends Collection<T>> void insertOrUpdateForList(S list);
 	/**
 	 * delete a value object.
 	 * note: you must load the value object first or do like this: 
@@ -44,36 +44,41 @@ public interface BasicDao {
 	 * </pre>
 	 * @param vo
 	 */
-	public void delete(Object vo);
+	public <T> void delete(T vo);
 	/**
 	 * delete a list of value objects.
 	 * @param list
 	 */
-	public void delete(Collection<Object> list);
+	public <T, S extends Collection<T>> void deleteForList(S list);
+	/**
+	 * @param ids
+	 * @param template
+	 */
+	public <S extends Serializable, T extends Entity<S>> void deleteForList(List<S> ids, T template);
 	/**
 	 * load an entity by id.
 	 * @param id
 	 * @param template just an empty object to know which class
 	 * @return entity
 	 */
-	public <T extends Entity> T load(Serializable id, T template);
+	public <S extends Serializable, T extends Entity<S>> T load(S id, T template);
 	/**
 	 * load a list of entity by their ids.
 	 * @param ids the list of id
 	 * @param template just an empty object to know which class
 	 * @return list of entity
 	 */
-	public <T extends Entity> List<T> loadForList(List<Serializable> ids, T template);
+	public <S extends Serializable, T extends Entity<S>> List<T> loadForList(List<S> ids, T template);
 	/**
 	 * load all entities.
 	 * @param template just an empty object to know which class
 	 * @return list of entities.
 	 */
-	public <T extends Entity> List<T> loadAll(T template);
+	public <S extends Serializable, T extends Entity<S>> List<T> loadAll(T template);
 	/**
 	 * delete an entity by id.
 	 * @param id
 	 * @param template just an empty object to know which class
 	 */
-	public <T extends Entity> void delete(Serializable id, T template);
+	public <S extends Serializable, T extends Entity<S>> void delete(S id, T template);
 }

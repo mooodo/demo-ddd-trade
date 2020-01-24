@@ -3,7 +3,6 @@
  */
 package com.demo2.trade.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import com.demo2.support.entity.Entity;
 /**
  * @author fangang
  */
-public class Order extends Entity {
+public class Order extends Entity<Long> {
 	private static final long serialVersionUID = 3997691790735159004L;
 	private Long id;
 	private Long customer_id;
@@ -22,17 +21,17 @@ public class Order extends Entity {
 	private String status;
 	private Address address;
 	private Customer customer;
-	private List<OrderDetail> orderDetails;
+	private List<OrderItem> orderItems;
 	/**
 	 * @return the id
 	 */
-	public Serializable getId() {
+	public Long getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Serializable id) {
+	public void setId(Long id) {
 		this.id = (Long)id;
 	}
 	/**
@@ -120,16 +119,16 @@ public class Order extends Entity {
 		this.address = address;
 	}
 	/**
-	 * @return the orderDetails
+	 * @return the orderItems
 	 */
-	public List<OrderDetail> getOrderDetails() {
-		return orderDetails;
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
 	}
 	/**
-	 * @param orderDetails the orderDetails to set
+	 * @param orderItems the orderItems to set
 	 */
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 	
 }

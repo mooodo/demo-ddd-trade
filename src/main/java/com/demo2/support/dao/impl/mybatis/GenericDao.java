@@ -23,28 +23,33 @@ public interface GenericDao {
 	/**
 	 * @param tableName
 	 * @param keys
-	 * @param values
-	 * @param condition
+	 * @param pks
 	 * @throws DataAccessException
 	 */
 	public void update(String tableName,List<Map<Object, Object>> keys,List<Map<Object, Object>> pks) throws DataAccessException;
 	/**
 	 * @param tableName
-	 * @param condition
+	 * @param pks
 	 * @throws DataAccessException
 	 */
 	public void delete(String tableName,List<Map<Object, Object>> pks) throws DataAccessException;
 	/**
 	 * @param tableName
 	 * @param pks
-	 * @return
+	 * @throws DataAccessException
+	 */
+	public void deleteForList(String tableName,List<Map<Object, Object>> pks) throws DataAccessException;
+	/**
+	 * @param tableName
+	 * @param pks
+	 * @return result set
 	 * @throws DataAccessException
 	 */
 	public List<Map<String, Object>> load(String tableName,List<Map<Object, Object>> pks) throws DataAccessException;
 	/**
 	 * @param tableName
-	 * @param condition
-	 * @return The map of record.
+	 * @param pks
+	 * @return result set
 	 * @throws DataAccessException
 	 */
 	public List<Map<String, Object>> find(String tableName,List<Map<Object, Object>> pks) throws DataAccessException;
