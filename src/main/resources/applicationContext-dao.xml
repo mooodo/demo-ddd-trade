@@ -9,7 +9,9 @@
 	>
 	<description>The application context for dao</description>
 	<bean id="basicDao" class="com.demo2.support.dao.impl.BasicDaoJdbcImpl"></bean>
-	<bean id="repository" class="com.demo2.support.repository.Repository">
+	<bean id="redisCache" class="com.demo2.support.cache.RedisCache"></bean>
+	<bean id="repository" class="com.demo2.support.repository.RepositoryWithCache">
 		<property name="dao" ref="basicDao"></property>
+		<property name="cache" ref="redisCache"></property>
 	</bean>
 </beans>

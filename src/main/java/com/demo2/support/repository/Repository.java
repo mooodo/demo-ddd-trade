@@ -14,7 +14,10 @@ import com.demo2.support.entity.Entity;
 import com.demo2.support.utils.BeanUtils;
 
 /**
- * The generic DDD repository for all of the services in the system.
+ * The generic DDD repository for all of the services in the system. 
+ * According to the configuration vObj.xml: 
+ * 1)if the value object has any join, fill the join after load data.
+ * 2)if the value object has any join and the join is aggregation, save the join data in same transaction.
  * @author fangang
  */
 public class Repository implements BasicDao {
@@ -36,31 +39,8 @@ public class Repository implements BasicDao {
 
 	@Override
 	public <S extends Serializable, T extends Entity<S>> T load(S id, T template) {
-		T vo = loadFromCache(id, template);
-		if(vo!=null) return vo;
-		vo = loadFromDb(id, template);
-		setJoins(vo);
-		return vo;
-	}
-
-	/**
-	 * load the value object from cache. If no found, return null.
-	 * @param id
-	 * @param template
-	 * @return the value object
-	 */
-	private <S extends Serializable, T extends Entity<S>> T loadFromCache(S id, T template) {
-		return null;
-	}
-
-	/**
-	 * load the value object from database. If no found, return null.
-	 * @param id
-	 * @param template
-	 * @return the value object
-	 */
-	private <S extends Serializable, T extends Entity<S>> T loadFromDb(S id, T template) {
 		T vo = dao.load(id, template);
+		setJoins(vo);
 		return vo;
 	}
 	
@@ -203,6 +183,7 @@ public class Repository implements BasicDao {
 
 	@Override
 	public <S extends Serializable, T extends Entity<S>> List<T> loadForList(List<S> ids, T template) {
+		if(ids==null||template==null) return null;
 		List<T> list = dao.loadForList(ids, template);
 		for(T vo : list) setJoins(vo);
 		return list;

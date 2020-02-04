@@ -18,7 +18,7 @@ public class Order extends Entity<Long> {
 	private Long address_id;
 	private Double amount;
 	private Date order_time;
-	private String status;
+	private String flag;
 	private Address address;
 	private Customer customer;
 	private List<OrderItem> orderItems;
@@ -83,16 +83,16 @@ public class Order extends Entity<Long> {
 		this.order_time = orderTime;
 	}
 	/**
-	 * @return the status
+	 * @return the flag
 	 */
-	public String getStatus() {
-		return status;
+	public String getFlag() {
+		return flag;
 	}
 	/**
-	 * @param status the status to set
+	 * @param flag the flag to set
 	 */
-	public void setStatus(String status) {
-		this.status = status;
+	public void setFlag(String flag) {
+		this.flag = flag;
 	}
 	/**
 	 * @return the customer

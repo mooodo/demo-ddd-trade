@@ -40,7 +40,7 @@ public class BasicDaoJdbcImpl implements BasicDao {
 		try {
 			dao.insert(tmpObj.tableName, tmpObj.columns, tmpObj.values);
 		} catch (DataAccessException e) {
-			throw new DaoException("error when insert vo");
+			throw new DaoException("error when insert vo", e);
 		}
 	}
 
@@ -51,7 +51,7 @@ public class BasicDaoJdbcImpl implements BasicDao {
 		try {
 			dao.update(tmpObj.tableName, tmpObj.colMap, tmpObj.pkMap);
 		} catch (DataAccessException e) {
-			throw new DaoException("error when update vo");
+			throw new DaoException("error when update vo", e);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class BasicDaoJdbcImpl implements BasicDao {
 		} catch (DataAccessException e) {
 			if(e.getCause() instanceof SQLIntegrityConstraintViolationException)
 				update(vo);
-			else throw new DaoException("error when insert vo");
+			else throw new DaoException("error when insert vo", e);
 		}
 	}
 

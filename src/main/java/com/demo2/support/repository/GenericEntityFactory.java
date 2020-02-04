@@ -90,7 +90,7 @@ public class GenericEntityFactory<S extends Serializable> {
 	private List<Entity<S>> loadOfOneToMany(Join join, Entity<S> vo) {
 		S id = vo.getId();
 		String clazz = join.getClazz();
-		Entity<S> template = BeanUtils.createEntity(clazz, id);
+		Entity<S> template = BeanUtils.createEntity(clazz, null);
 		String joinKey = join.getJoinKey();
 		BeanUtils.setValueByField(template, joinKey, id);
 		return dao.loadAll(template);

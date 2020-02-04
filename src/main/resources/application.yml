@@ -12,6 +12,17 @@ spring:
     username: root
     password: 1234
     type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    database: 0
+    host: 139.9.35.139
+    port: 6379
+    password: 
+    pool:
+      maxActive: 200
+      maxWait: -1
+      maxIdel: 10
+      minIdel: 0
+    timeout: 1000
 mybatis:
   mapperLocations: classpath:mapper/*Mapper.xml
 logging:

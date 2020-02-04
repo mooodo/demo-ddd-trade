@@ -38,10 +38,10 @@
   	<property name="address_id" column="address_id"></property>
   	<property name="amount" column="amount"></property>
   	<property name="order_time" column="order_time"></property>
-  	<property name="status" column="status"></property>
+  	<property name="flag" column="flag"></property>
   	<join name="customer" joinKey="customer_id" joinType="manyToOne" class="com.demo2.trade.entity.Customer"></join>
   	<join name="address" joinKey="address_id" joinType="manyToOne" class="com.demo2.trade.entity.Address"></join>
-  	<join name="orderDetails" joinKey="order_id" joinType="oneToMany" isAggregation="true" class="com.demo2.trade.entity.OrderItem"></join>
+  	<join name="orderItems" joinKey="order_id" joinType="oneToMany" isAggregation="true" class="com.demo2.trade.entity.OrderItem"></join>
   </vo>
   <vo class="com.demo2.trade.entity.OrderItem" tableName="OrderItem">
   	<property name="id" column="id" isPrimaryKey="true"></property>

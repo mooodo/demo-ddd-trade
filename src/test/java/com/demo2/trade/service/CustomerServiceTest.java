@@ -77,7 +77,7 @@ public class CustomerServiceTest {
 		
 		List<Address> addresses = new ArrayList<>();
 		Address address = new Address();
-		address.setId(id);
+		address.setId((long)100110);
 		address.setCustomerId(id);
 		address.setCountry("China");
 		address.setProvince("Shandong");
@@ -88,7 +88,7 @@ public class CustomerServiceTest {
 		addresses.add(address);
 
 		Address address1 = new Address();
-		address1.setId(id);
+		address1.setId((long)100111);
 		address1.setCustomerId(id);
 		address1.setCountry("China");
 		address1.setProvince("Zhejiang");

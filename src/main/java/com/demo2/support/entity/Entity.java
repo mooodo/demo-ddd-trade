@@ -52,6 +52,17 @@ public abstract class Entity<T extends Serializable> implements Serializable {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		Field[] fields = this.getClass().getDeclaredFields();
+		StringBuffer buffer = new StringBuffer("{");
+		for(int i=0; i<fields.length; i++) {
+			String name = fields[i].getName();
+			Object value = getValue(this,fields[i]);
+			buffer.append(name).append(":").append(value).append(", ");
+		}
+		return buffer.substring(0, buffer.length()-2)+"}";
+	}
 	/**
 	 * @param obj
 	 * @param field

@@ -70,8 +70,10 @@ public interface BasicDao {
 	 */
 	public <S extends Serializable, T extends Entity<S>> List<T> loadForList(List<S> ids, T template);
 	/**
-	 * load all entities.
-	 * @param template just an empty object to know which class
+	 * load all entities according to a condition, which the condition come from the template. 
+	 * for example: I want to load all of the items of an order, then the template is the orderItem 
+	 * and set the orderId of the template. Then it will load all the items of this order.
+	 * @param template just an empty object to know which class, and set the condition to it.
 	 * @return list of entities.
 	 */
 	public <S extends Serializable, T extends Entity<S>> List<T> loadAll(T template);

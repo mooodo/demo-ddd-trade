@@ -52,6 +52,7 @@ public class BeanUtils {
 	 * @return the value
 	 */
 	public static Object getValueByField(Object bean, String fieldName) {
+		if(bean==null||fieldName==null) return null;
 		try {
 			Field field = bean.getClass().getDeclaredField(fieldName);
 			boolean isAccessible = field.isAccessible();
