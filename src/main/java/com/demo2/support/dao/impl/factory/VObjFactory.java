@@ -87,6 +87,10 @@ public class VObjFactory extends XmlBuildFactoryTemplate {
 				Join join = getJoin((Element) node);
 				vObj.getJoins().add(join);
 			}
+			if (node.getNodeName().equals("ref")) {
+				Ref ref = getRef((Element) node);
+				vObj.getRefs().add(ref);
+			}
 		}
 	}
 	
@@ -124,5 +128,25 @@ public class VObjFactory extends XmlBuildFactoryTemplate {
 		boolean isAggregation = "true".equals(element.getAttribute("isAggregation")) ? true : false;
 		join.setAggregation(isAggregation);
 		return join;
+	}
+	
+	/**
+	 * get ref tag from xml.
+	 * @param element
+	 * @return ref
+	 */
+	private Ref getRef(Element element) {
+		Ref ref = new Ref();
+		String name = element.getAttribute("name");
+		ref.setName(name);
+		String refKey = element.getAttribute("refKey");
+		ref.setRefKey(refKey);
+		String refType = element.getAttribute("refType");
+		ref.setRefType(refType);
+		String bean = element.getAttribute("bean");
+		ref.setBean(bean);
+		String method = element.getAttribute("method");
+		ref.setMethod(method);
+		return ref;
 	}
 }

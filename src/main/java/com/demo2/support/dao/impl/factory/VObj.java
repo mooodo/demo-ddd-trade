@@ -15,6 +15,7 @@ public class VObj {
 	private String table;
 	private List<Property> properties = new ArrayList<>();
 	private List<Join> joins = new ArrayList<>();
+	private List<Ref> refs = new ArrayList<>();
 	/**
 	 * @return the clazz
 	 */
@@ -62,5 +63,17 @@ public class VObj {
 	 */
 	public void setJoins(List<Join> joins) {
 		this.joins = joins;
+	}
+	/**
+	 * @return the refs
+	 */
+	public List<Ref> getRefs() {
+		return refs;
+	}
+	/**
+	 * @param refs the refs to set
+	 */
+	public void setRefs(List<Ref> refs) {
+		this.refs = refs;
 	}
 }
