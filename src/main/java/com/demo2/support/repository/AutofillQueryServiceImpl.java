@@ -98,6 +98,7 @@ public class AutofillQueryServiceImpl extends QueryServiceImpl {
 	 */
 	private <S extends Serializable, T extends Entity<S>> void autoFillJoin(List<T> list, Join join) {
 		if(list==null||list.isEmpty()||join==null) return;
+		//TODO need batch operation
 		for(T vo : list) {
 			GenericEntityFactory<S> factory = new GenericEntityFactory<S>();
 			factory.build(join, vo, dao);
@@ -114,6 +115,7 @@ public class AutofillQueryServiceImpl extends QueryServiceImpl {
 	 */
 	private <S extends Serializable, T extends Entity<S>> void autoFillRef(List<T> list, Ref ref) {
 		if(list==null||list.isEmpty()||ref==null) return;
+		//TODO need batch operation
 		for(T vo : list) {
 			ReferenceFactory<S> factory = new ReferenceFactory<>(context);
 			factory.build(ref, vo);
