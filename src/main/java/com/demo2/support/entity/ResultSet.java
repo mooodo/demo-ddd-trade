@@ -15,7 +15,7 @@ public class ResultSet {
 	private Integer page;
 	private Integer size;
 	private Long count;
-	private Map<String, Object> aggregate;
+	private Map<String, Object> aggregation;
 	/**
 	 * @return the data
 	 */
@@ -65,16 +65,16 @@ public class ResultSet {
 		this.count = count;
 	}
 	/**
-	 * @return the aggregate
+	 * @return the aggregation
 	 */
-	public Map<String, Object> getAggregate() {
-		return aggregate;
+	public Map<String, Object> getAggregation() {
+		return aggregation;
 	}
 	/**
-	 * @param aggregate the aggregate to set
+	 * @param aggregation the aggregation to set
 	 */
-	public void setAggregate(Map<String, Object> aggregate) {
-		this.aggregate = aggregate;
+	public void setAggregation(Map<String, Object> aggregation) {
+		this.aggregation = aggregation;
 	}
 	
 }

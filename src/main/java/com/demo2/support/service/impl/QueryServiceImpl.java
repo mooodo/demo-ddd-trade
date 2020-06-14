@@ -32,15 +32,14 @@ public class QueryServiceImpl implements QueryService {
 
 	@Override
 	public ResultSet query(Map<String, Object> params) {
-		beforeQuery(params);
-		List<?> result = queryDao.query(params);
-		
 		ResultSet resultSet = new ResultSet();
-		resultSet.setData(result);
-		resultSet = afterQuery(params, resultSet);
-		
 		page(params, resultSet);
 		aggregate(params, resultSet);
+		
+		beforeQuery(params);
+		List<?> result = queryDao.query(params);
+		resultSet.setData(result);
+		resultSet = afterQuery(params, resultSet);
 		return resultSet;
 	}
 	
@@ -72,16 +71,19 @@ public class QueryServiceImpl implements QueryService {
 		Object page = params.get("page");
 		Object size = params.get("size");
 		Object count = params.get("count");
-		if( size==null ) return;
-		
-		int p = (page==null)? 0 : new Integer(page.toString());
-		int s = new Integer(size.toString());
-		params.put("page", p);
-		resultSet.setPage(p);
-		resultSet.setSize(s);
 		
 		long cnt = (count==null) ? queryDao.count(params) : new Long(count.toString());
 		resultSet.setCount(cnt);
+		
+		if( size==null ) return;
+		int p = (page==null)? 0 : new Integer(page.toString());
+		int s = new Integer(size.toString());
+		int firstRow = p * s;
+		params.put("page", p);
+		params.put("size", s);
+		params.put("firstRow", firstRow);
+		resultSet.setPage(p);
+		resultSet.setSize(s);
 	}
 	
 	/**
@@ -90,6 +92,13 @@ public class QueryServiceImpl implements QueryService {
 	 */
 	private void aggregate(Map<String, Object> params, ResultSet resultSet) {
 		if(params==null||params.isEmpty()) return;
-		//TODO
+		@SuppressWarnings("unchecked")
+		Map<String, String> aggregation = (Map<String, String>)params.get("aggregation");
+		if(aggregation==null||aggregation.isEmpty()) return;
+		
+		@SuppressWarnings("unchecked")
+		Map<String, Object> aggValue = (Map<String, Object>)params.get("aggValue");
+		if(aggValue==null) aggValue = queryDao.aggregate(params);
+		resultSet.setAggregation(aggValue);
 	}
 }

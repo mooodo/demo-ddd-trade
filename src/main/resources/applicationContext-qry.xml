@@ -11,14 +11,14 @@
 	<bean id="customerQry" class="com.demo2.support.service.impl.QueryServiceImpl">
 		<property name="queryDao">
 			<bean class="com.demo2.support.dao.impl.QueryDaoMybatisImpl">
-				<property name="sqlMapper" value="com.demo2.trade.query.dao.CustomerMapper.query"></property>
+				<property name="sqlMapper" value="com.demo2.trade.query.dao.CustomerMapper"></property>
 			</bean>
 		</property>
 	</bean>
 	<bean id="productQry" class="com.demo2.support.repository.AutofillQueryServiceImpl">
 		<property name="queryDao">
 			<bean class="com.demo2.support.dao.impl.QueryDaoMybatisImpl">
-				<property name="sqlMapper" value="com.demo2.trade.query.dao.ProductMapper.query"></property>
+				<property name="sqlMapper" value="com.demo2.trade.query.dao.ProductMapper"></property>
 			</bean>
 		</property>
 		<property name="dao" ref="basicDao"></property>

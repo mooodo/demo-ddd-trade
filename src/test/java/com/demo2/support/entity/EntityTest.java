@@ -37,7 +37,7 @@ public class EntityTest {
 	public void testToString() {
 		Person person = new Person(1,"John",DateUtils.getDate("2020-01-01 00:00:00","YYYY-MM-DD hh:mm:ss"),3);
 		String actual = person.toString();
-		String excepted = "{serialVersionUID:1, id:1, name:John, birthday:Sun Dec 29 00:00:00 CST 2019, children:3, this$0:com.demo2.support.entity.EntityTest@17baae6e}";
+		String excepted = "{id:1, name:John, birthday:Sun Dec 29 00:00:00 CST 2019, children:3}";
 		assertThat(actual, equalTo(excepted));
 	}
 

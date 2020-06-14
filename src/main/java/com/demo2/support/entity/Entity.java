@@ -58,6 +58,7 @@ public abstract class Entity<T extends Serializable> implements Serializable {
 		StringBuffer buffer = new StringBuffer("{");
 		for(int i=0; i<fields.length; i++) {
 			String name = fields[i].getName();
+			if("serialVersionUID".equals(name)||"this$0".equals(name)) continue;
 			Object value = getValue(this,fields[i]);
 			buffer.append(name).append(":").append(value).append(", ");
 		}
@@ -72,7 +73,7 @@ public abstract class Entity<T extends Serializable> implements Serializable {
 		return BeanUtils.getValueByField(obj, field.getName());
 	}
 	
-	private String[] exclude = new String[] {"serialVersionUID"};
+	private String[] exclude = new String[] {};
 	/**
 	 * @return the exclude
 	 */
@@ -93,7 +94,7 @@ public abstract class Entity<T extends Serializable> implements Serializable {
 	
 	private boolean isExclude(String field) {
 		for(int i=0; i<exclude.length ;i++)
-			if(exclude[i].equals(field)) return true;
+			if(exclude[i].equals(field)||"serialVersionUID".equals(field)) return true;
 		return false;
 	}
 }

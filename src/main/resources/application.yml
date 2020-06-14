@@ -8,14 +8,14 @@ spring:
       prefix: /
       suffix: .jsp
   datasource:
-    url: jdbc:mysql://139.9.35.139:3306/demo
+    url: jdbc:mysql://47.105.194.89:32306/demo
     username: root
     password: 1234
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
     database: 0
-    host: 139.9.35.139
-    port: 6379
+    host: 47.105.178.19
+    port: 31379
     password: 
     pool:
       maxActive: 200
@@ -24,7 +24,7 @@ spring:
       minIdel: 0
     timeout: 1000
 mybatis:
-  mapperLocations: classpath:mapper/*Mapper.xml
+  mapperLocations: classpath*:mapper/*Mapper.xml
 logging:
   level:
     com.demo2.trade: DEBUG
