@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.demo2.support.utils.DateUtils;
 import com.demo2.trade.entity.Order;
 import com.demo2.trade.entity.OrderItem;
+import com.demo2.trade.service.OrderService;
 
 /**
  * @author fangang
@@ -32,7 +33,7 @@ public class OrderServiceTest {
 	@Test
 	public void testSaveAndDeleteWithoutItems() {
 		Order order = new Order();
-		long id = 10010;
+		long id = 10012;
 		order.setId(id);
 		order.setCustomerId((long)10001);
 		order.setAddressId((long)100010);
@@ -42,17 +43,17 @@ public class OrderServiceTest {
 		service.createOrder(order);
 		Order actual = service.checkOrder(id);
 		actual.setExclude(new String[] {"address","customer","orderItems"});
-		assertThat(actual, equalTo(order));
+		assertThat("error when insert", actual, equalTo(order));
 		
-		order.setFlag("PAYMENT");
+		//order.setFlag("PAYMENT");
 		service.modifyOrder(order);
 		actual = service.checkOrder(id);
 		actual.setExclude(new String[] {"address","customer","orderItems"});
-		assertThat(actual, equalTo(order));
+		assertThat("error when update", actual, equalTo(order));
 		
 		service.deleteOrder(order);
 		actual = service.checkOrder(id);
-		assertNull(actual);
+		assertNull("error when delete", actual);
 	}
 
 	@Test
@@ -89,8 +90,8 @@ public class OrderServiceTest {
 		service.createOrder(order);
 		Order actual = service.checkOrder(id);
 		actual.setExclude(new String[] {"address","customer"});
-		for(OrderItem item3 : actual.getOrderItems()) item3.setExclude(new String[] {"product"});
-		assertThat(actual, equalTo(order));
+		for(OrderItem item : actual.getOrderItems()) item.setExclude(new String[] {"product"});
+		assertThat("error when insert", actual, equalTo(order));
 		
 		order.setAmount((double)7500);
 		item2.setPrice((double)30);
@@ -109,11 +110,11 @@ public class OrderServiceTest {
 		actual = service.checkOrder(id);
 		actual.setExclude(new String[] {"address","customer"});
 		for(OrderItem item4 : actual.getOrderItems()) item4.setExclude(new String[] {"product"});
-		assertThat(actual, equalTo(order));
+		assertThat("error when update", actual, equalTo(order));
 		
 		service.deleteOrder(order);
 		actual = service.checkOrder(id);
-		assertNull(actual);
+		assertNull("error when delete", actual);
 	}
 
 }

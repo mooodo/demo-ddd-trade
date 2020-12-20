@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.demo2.trade.entity.Product;
+import com.demo2.trade.service.ProductService;
 
 /**
  * @author fangang

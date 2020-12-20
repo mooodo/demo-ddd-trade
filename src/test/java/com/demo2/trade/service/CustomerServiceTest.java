@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.demo2.support.utils.DateUtils;
 import com.demo2.trade.entity.Address;
 import com.demo2.trade.entity.Customer;
+import com.demo2.trade.service.CustomerService;
 
 /**
  * @author fangang
