@@ -9,10 +9,10 @@
 	>
 	<description>The application context for orm</description>
 	<bean id="customer" class="com.demo2.trade.service.impl.CustomerServiceImpl">
-		<property name="dao" ref="repository"></property>
+		<property name="dao" ref="repositoryWithCache"></property>
 	</bean>
 	<bean id="product" class="com.demo2.trade.service.impl.ProductServiceImpl">
-		<property name="dao" ref="repository"></property>
+		<property name="dao" ref="repositoryWithCache"></property>
 	</bean>
 	<bean id="supplier" class="com.demo2.trade.service.impl.SupplierServiceImpl">
 		<property name="dao" ref="basicDao"></property>

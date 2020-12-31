@@ -26,9 +26,7 @@
     <property name="unit" column="unit"></property>
     <property name="classify" column="classify"></property>
     <property name="supplier_id" column="supplier_id"></property>
-    <!-- 
-    <join name="supplier" joinKey="supplier_id" joinType="manyToOne" class="com.demo2.trade.entity.Supplier"></join> -->
-    <ref name="supplier" refKey="supplier_id" refType="manyToOne" bean="supplier" method="loadSupplier"></ref>
+    <join name="supplier" joinKey="supplier_id" joinType="manyToOne" class="com.demo2.trade.entity.Supplier"></join>
   </vo>
   <vo class="com.demo2.trade.entity.Supplier" tableName="Supplier">
     <property name="id" column="id" isPrimaryKey="true"></property>
