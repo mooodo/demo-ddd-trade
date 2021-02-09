@@ -11,13 +11,13 @@ spring:
       prefix: /
       suffix: .jsp
   datasource:
-    url: jdbc:mysql://47.105.194.89:32306/demo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
-    username: root
+    url: jdbc:mysql://118.190.201.78:32306/demo?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    username: demo
     password: 1234
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
     database: 0
-    host: 47.105.178.19
+    host: 118.190.201.78
     port: 31379
     password: 
     pool:

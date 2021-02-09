@@ -26,6 +26,9 @@
     <property name="unit" column="unit"></property>
     <property name="classify" column="classify"></property>
     <property name="supplier_id" column="supplier_id"></property>
+    <property name="image" column="image"></property>
+    <property name="original_price" column="original_price"></property>
+    <property name="tip" column="tip"></property>
     <join name="supplier" joinKey="supplier_id" joinType="manyToOne" class="com.demo2.trade.entity.Supplier"></join>
   </vo>
   <vo class="com.demo2.trade.entity.Supplier" tableName="Supplier">

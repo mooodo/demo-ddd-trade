@@ -10,6 +10,9 @@
 		<if test="id != '' and id != null">
 			and id = #{id}
 		</if>
+		<if test="value != '' and value != null">
+			and (id like '%${value}' or name like '%${value}')
+		</if>
 	</sql>
 	
 	<sql id="isPage">
