@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <docker.image.prefix>demo</docker.image.prefix>
-    <docker.repo>172.31.87.111:5000</docker.repo>
+    <docker.repo>repository:5000</docker.repo>
   </properties>
   
   <dependencies>
